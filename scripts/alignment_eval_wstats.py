@@ -1,20 +1,38 @@
-
 # ============================================================
-# Quantitative evaluation of z-stack alignment: all six fish
+# Quantitative evaluation of z-stack alignment: six fish
+#
+# PURPOSE:
+#   Compare adjacent-section image similarity before and after
+#   sequential section alignment using two image-based metrics.
 #
 # METRICS:
 #   1. Adjacent-section normalized cross-correlation (NCC)
-#   2. Adjacent-section gradient / edge similarity
+#   2. Gradient-based structural similarity, calculated as NCC
+#      between the Sobel gradient-magnitude images
+#
+# EVALUATION:
+#   - Compare consecutive sections within each z-stack.
+#   - Exclude blank / zero-signal slices automatically.
+#   - Exclude adjacent-section pairs that are invalid in either
+#     the before-alignment or after-alignment stack from paired
+#     comparisons.
+#   - Use a tissue mask to reduce the contribution of background
+#     pixels when calculating the metrics.
 #
 # STATISTICS:
-#   Paired, two-sided Wilcoxon signed-rank tests across fish
-#   Each fish contributes one median value per condition.
+#   - Each fish contributes one median value per metric and
+#     condition.
+#   - Paired, two-sided t-tests compare fish-level medians
+#     before and after alignment.
+#   - Report mean paired changes and 95% confidence intervals.
+#   - Adjacent-section pairs are not treated as independent
+#     biological replicates.
 #
 # IMPORTANT:
-#   - Bad sections were excluded before z-stack generation.
-#   - Blank / zero-signal slices are automatically excluded.
-#   - Adjacent-section pairs are NOT independent replicates.
-#   - Gradient similarity = NCC between Sobel gradient images.
+#   - Previously identified bad sections must have been excluded
+#     before z-stack generation.
+#   - Higher similarity scores indicate greater image similarity,
+#     but do not independently establish anatomical accuracy.
 #   - No residual displacement is calculated in this script.
 #
 # OUTPUTS:
@@ -33,7 +51,7 @@
 #       all_fish_edge_similarity.png
 #       all_fish_alignment_summary.png
 #
-# Dependencies:
+# DEPENDENCIES:
 #   pip install pynrrd scipy pandas matplotlib scikit-image
 # ============================================================
 
